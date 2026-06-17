@@ -138,3 +138,297 @@ show();
 
 </script></body>
 </html>
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>کافی نت آنلاین علی‌آباد</title>
+
+<style>
+body{
+margin:0;
+font-family:tahoma;
+background:linear-gradient(135deg,#0f172a,#1e293b,#0f172a);
+color:white;
+}
+
+/* HEADER */
+header{
+text-align:center;
+padding:60px 20px;
+background:rgba(255,255,255,0.05);
+backdrop-filter:blur(10px);
+}
+
+header h1{
+font-size:40px;
+margin-bottom:10px;
+animation:fade 1s ease;
+}
+
+header p{
+opacity:.8;
+}
+
+/* CONTAINER */
+.container{
+width:92%;
+max-width:1100px;
+margin:auto;
+padding-bottom:50px;
+}
+
+/* CARD */
+.card{
+background:rgba(255,255,255,0.08);
+padding:20px;
+margin:20px 0;
+border-radius:20px;
+box-shadow:0 10px 30px rgba(0,0,0,0.3);
+animation:up 0.8s ease;
+}
+
+h2{
+color:#00e5ff;
+}
+
+/* SERVICES */
+.services{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+gap:10px;
+}
+
+.service{
+background:rgba(255,255,255,0.08);
+padding:10px;
+border-radius:12px;
+text-align:center;
+}
+
+/* INPUT */
+input,textarea{
+width:100%;
+padding:10px;
+margin-top:8px;
+border-radius:10px;
+border:none;
+outline:none;
+}
+
+/* BUTTON */
+button{
+width:100%;
+padding:12px;
+margin-top:10px;
+background:#00e5ff;
+border:none;
+border-radius:10px;
+font-weight:bold;
+cursor:pointer;
+transition:.3s;
+}
+
+button:hover{
+background:#00bcd4;
+transform:scale(1.02);
+}
+
+/* ITEM */
+.item{
+background:rgba(255,255,255,0.08);
+padding:10px;
+margin:10px 0;
+border-radius:10px;
+}
+
+/* WHATSAPP FLOAT */
+.whatsapp{
+position:fixed;
+bottom:20px;
+left:20px;
+background:#25D366;
+width:55px;
+height:55px;
+border-radius:50%;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:30px;
+text-decoration:none;
+color:white;
+}
+
+/* ANIMATIONS */
+@keyframes fade{
+from{opacity:0;transform:translateY(-20px);}
+to{opacity:1;transform:translateY(0);}
+}
+
+@keyframes up{
+from{opacity:0;transform:translateY(20px);}
+to{opacity:1;transform:translateY(0);}
+}
+
+</style>
+
+</head>
+
+<body>
+
+<header>
+<h1>کافی نت آنلاین علی‌آباد</h1>
+<p>ثبت و مدیریت خدمات اینترنتی</p>
+</header>
+
+<div class="container">
+
+<!-- SERVICES -->
+<div class="card">
+<h2>خدمات ما</h2>
+
+<div class="services">
+<div class="service">ثبت نام اینترنتی</div>
+<div class="service">بانکی</div>
+<div class="service">بیمه</div>
+<div class="service">مالیاتی</div>
+<div class="service">قضایی</div>
+<div class="service">خودرویی</div>
+<div class="service">پستی</div>
+</div>
+
+</div>
+
+<!-- FORM -->
+<div class="card">
+<h2>ثبت درخواست</h2>
+
+<input id="name" placeholder="نام">
+<input id="phone" placeholder="شماره">
+<textarea id="service" placeholder="نوع خدمت"></textarea>
+
+<button onclick="send()">ثبت درخواست</button>
+</div>
+
+<!-- ADMIN -->
+<div class="card">
+<h2>پنل مدیریت</h2>
+
+<input id="pass" type="password" placeholder="رمز ورود">
+<button onclick="login()">ورود</button>
+
+<div id="admin" style="display:none">
+<h3>درخواست‌ها</h3>
+<input id="search" onkeyup="search()" placeholder="جستجو...">
+
+<div id="list"></div>
+</div>
+
+</div>
+
+</div>
+
+<!-- WHATSAPP -->
+<a class="whatsapp" href="https://wa.me/989931930285" target="_blank">💬</a>
+
+<script>
+
+// SAVE
+function send(){
+
+let name=document.getElementById("name").value;
+let phone=document.getElementById("phone").value;
+let service=document.getElementById("service").value;
+
+if(!name||!phone||!service){
+alert("همه فیلدها را پر کنید");
+return;
+}
+
+let data=JSON.parse(localStorage.getItem("req")||"[]");
+
+data.push({
+name,
+phone,
+service,
+status:"جدید"
+});
+
+localStorage.setItem("req",JSON.stringify(data));
+
+alert("ثبت شد");
+}
+
+// LOGIN
+function login(){
+
+if(document.getElementById("pass").value==="1234"){
+document.getElementById("admin").style.display="block";
+load();
+}else{
+alert("رمز اشتباه");
+}
+}
+
+// LOAD
+function load(){
+
+let data=JSON.parse(localStorage.getItem("req")||"[]");
+let list=document.getElementById("list");
+
+list.innerHTML="";
+
+data.forEach((d,i)=>{
+
+list.innerHTML+=`
+<div class="item">
+<b>${d.name}</b><br>
+${d.phone}<br>
+${d.service}<br>
+<b>وضعیت:</b> ${d.status}
+<button onclick="del(${i})">حذف</button>
+</div>
+`;
+
+});
+}
+
+// DELETE
+function del(i){
+
+let data=JSON.parse(localStorage.getItem("req")||"[]");
+data.splice(i,1);
+localStorage.setItem("req",JSON.stringify(data));
+load();
+
+}
+
+// SEARCH
+function search(){
+
+let value=document.getElementById("search").value.toLowerCase();
+let data=JSON.parse(localStorage.getItem("req")||"[]");
+
+let list=document.getElementById("list");
+list.innerHTML="";
+
+data.filter(d=>d.name.toLowerCase().includes(value)).forEach((d,i)=>{
+
+list.innerHTML+=`
+<div class="item">
+<b>${d.name}</b><br>
+${d.phone}<br>
+${d.service}
+</div>
+`;
+
+});
+
+}
+
+</script>
+
+</body>
+  </html>
